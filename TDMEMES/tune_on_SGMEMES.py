@@ -3,10 +3,12 @@ import torch
 import pprint
 import time
 import json
-import utils
 import cProfile
 import itertools
 import PIL.Image
+import sys
+sys.path.append("..") # Adds higher directory 
+import utils
 import copy
 import sklearn.metrics
 import numpy as np
@@ -24,10 +26,10 @@ from tokeniser_prepper import BERT_preparation, ROBERTA_preparation, VILT_prepar
 # from transformers import AutoProcessor, AltCLIPTextModel, AltCLIPVisionModel
 
 # dataset class
-from ..dataset_class import text_vector_dataset_extractor, entity_error_analysis
+from model_dataset_class import text_vector_dataset_extractor, entity_error_analysis
 
 # trilinear
-from ..attached_heads import trilinear_head, trilinear_head_relations,deeper_trilinear_head_relations
+from attached_heads import trilinear_head,deeper_trilinear_head_relations
 torch.set_num_threads(2)
 torch.set_num_interop_threads(2)
 
@@ -286,7 +288,11 @@ if __name__=="__main__":
         for item in loaded_labelsfile_dict:
             all_imageslist.append(item["source_image"])
     
-    
+    entityheadname = "" # model .torch files. Or just comment out the loads below if you're testing.
+    entityname = ""
+    relationheadname = ""
+    relationname_img = ""
+    relationname_text = ""
     
     print("Total in SGMEMES:",len(all_imageslist))
             
@@ -379,19 +385,13 @@ if __name__=="__main__":
     relationscheduler = StepLR(relationheadoptimizer, step_size=relation_scheduler_stepsize, gamma=0.5) # every x epochs, We REDUCE learning rate.
     entityscheduler = StepLR(entityheadoptimizer, step_size=entity_scheduler_stepsize, gamma=0.5) # every x epochs, We REDUCE learning rate.
     
-    entity_embed.model.load_state_dict(torch.load("posabalated_ENT0_5e-05_16_innate_epoch_29_BERT_embedder_CLIP.torch"))
-    entity_embed_head.load_state_dict(torch.load("posabalated_ENTHEAD_0_5e-05_16_innate_epoch_29_BERT.torch"))
-    relation_embed.imagemodel.load_state_dict(torch.load("posabalated_RLN_0_5e-05_16_innate_epoch_29_clip_image_CLIP.torch"))
-    relation_embed.textmodel.load_state_dict(torch.load("posabalated_RLN_0_5e-05_16_innate_epoch_29_clip_text_CLIP.torch"))
-    relation_embed_head.load_state_dict(torch.load("posabalated_RLNHEAD_0_5e-05_16_innate_epoch_29_CLIP.torch"))
+    entity_embed.model.load_state_dict(torch.load(entityname))
+    entity_embed_head.load_state_dict(torch.load(entityheadname))
+    relation_embed.imagemodel.load_state_dict(torch.load(relationname_img))
+    relation_embed.textmodel.load_state_dict(torch.load(relationname_text))
+    relation_embed_head.load_state_dict(torch.load(relationheadname))
 
-    # entity_embed.model.load_state_dict(torch.load("normal_ENT0_5e-05_16_innate_epoch_29__BERT_embedder_CLIP.torch"))
-    # entity_embed_head.load_state_dict(torch.load("normal_ENTHEAD_0_5e-05_16_innate_epoch_29__BERT.torch"))
-    # relation_embed.imagemodel.load_state_dict(torch.load("normal_RLN_0_5e-05_16_innate_epoch_29__clip_image_CLIP.torch"))
-    # relation_embed.textmodel.load_state_dict(torch.load("normal_RLN_0_5e-05_16_innate_epoch_29__clip_text_CLIP.torch"))
-    # relation_embed_head.load_state_dict(torch.load("normal_RLNHEAD_0_5e-05_16_innate_epoch_29__CLIP.torch"))
-    
-    
+
     # print("Fewshot train image list:",len(fewshottrain_img_list))
     # print("Fewshot test image list:",len(fewshottest_img_list))
     for split_number in range(split_number_cap):

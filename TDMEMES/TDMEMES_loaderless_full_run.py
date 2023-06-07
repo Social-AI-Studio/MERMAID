@@ -2,7 +2,9 @@ import os
 import torch
 import pprint
 import time
+import sys
 import json
+sys.path.append("..") # Adds higher directory 
 import utils
 import cProfile
 import itertools
@@ -14,11 +16,12 @@ from io import BytesIO
 from PIL import Image
 from torchvision.transforms import ToTensor
 from tokeniser_prepper import BERT_preparation, ROBERTA_preparation, VILT_preparation, BLIP_preparation, BLIP_2_preparation, FLAVA_preparation, CLIP_preparation, VisualBERT_preparation, data2vec_preparation
-from attached_heads import trilinear_head, trilinear_head_relations,deeper_trilinear_head_relations
+from attached_heads import trilinear_head,deeper_trilinear_head_relations
 # torch.set_num_threads(2)
 # torch.set_num_interop_threads(2)
 
-
+# Run an already trained model on the entire TDMEMES dataset.
+# Entity only.
 
 def threshold_entity_extractor(input_vector,thresholdvalue):
     # input vector => SEQLEN, 2
@@ -57,8 +60,17 @@ if __name__=="__main__":
     annotation_file = os.path.join("TDMEMES","annotation.json")
     split_dump = False
     all_archetypes = ['Buff-Doge-vs-Cheems', 'Cuphead-Flower', 'Drake-Hotline-Bling', 'Mr-incredible-mad', 'Soyboy-Vs-Yes-Chad', 'Spongebob-Burning-Paper', 'Squidward', 'Teachers-Copy', 'Tuxedo-Winnie-the-Pooh-grossed-reverse', 'Arthur-Fist', 'Distracted-Boyfriend', 'Moe-throws-Barney', 'Types-of-Headaches-meme', 'Weak-vs-Strong-Spongebob', 'This-Is-Brilliant-But-I-Like-This', 'Running-Away-Balloon', 'Pretending-To-Be-Happy-Hiding-Crying-Behind-A-Mask', 'Mother-Ignoring-Kid-Drowning-In-A-Pool', 'kermit-window', 'Is-This-A-Pigeon', 'If-those-kids-could-read-theyd-be-very-upset', 'Hide-the-Pain-Harold', 'Feels-Good-Man', 'Clown-Applying-Makeup', 'Both-Buttons-Pressed', 'Anime-Girl-Hiding-from-Terminator', 'Epic-Handshake', 'Disappointed-Black-Guy', 'Blank-Nut-Button', 'Tuxedo-Winnie-The-Pooh', 'Ew-i-stepped-in-shit', 'Two-Paths', 'This-is-Worthless', 'They-are-the-same-picture', 'The-Scroll-Of-Truth', 'Spider-Man-Double', 'Skinner-Out-Of-Touch', 'Left-Exit-12-Off-Ramp', 'Fancy-pooh']
+    verbose = False
+        
     
-    # 76fv3h.jpg # example of multiple entities in a single statement
+    # we only ran with bert/clip for this setting.
+    
+    
+    entityheadname = "" # model .torch files. Or just comment out the loads below if you're testing.
+    entityname = ""
+    relationheadname = ""
+    relationname_img = ""
+    relationname_text = ""
     
  
     with open(annotation_file,"r",encoding="utf-8") as annotationfile:
@@ -86,19 +98,20 @@ if __name__=="__main__":
     entity_embed_head = trilinear_head(device,embed_dimension=768,targetsize = 2)
     entity_embed_head.to(entity_embed_head.device)
     entity_reference_vocab_dict = {i:k for k,i in entity_embed.texttokenizer.get_vocab().items()}
-    entity_embed.model.load_state_dict(torch.load("fewshot_ENT0_5e-05_16_abalated.torch"))
+    entity_embed.model.load_state_dict(torch.load(entityname))
     entity_embed.model.eval()
-    entity_embed_head.load_state_dict(torch.load("fewshot_ENTHEAD_0_5e-05_16_abalated.torch"))
+    entity_embed_head.load_state_dict(torch.load(entityheadname))
     entity_embed_head.eval()
+
 
 
     relation_embed = CLIP_preparation(prefix,device)
     relation_embed_head = deeper_trilinear_head_relations(device,image_embed1=relation_embed.imagembed_size1,image_embed2=relation_embed.imagembed_size2,text_embed=relation_embed.textembed_size,targetsize = 9,parameter=True,wordonly=wordonly,noposition=not text_box_positions_used)
     relation_internal_parameter = relation_embed_head.parameter # represents meme creator
     relation_embed_head.to(relation_embed_head.device)
-    relation_embed.imagemodel.load_state_dict(torch.load("fewshot_RLN_0_5e-05_16_image_abalated.torch"))
-    relation_embed.textmodel.load_state_dict(torch.load("fewshot_RLN_0_5e-05_16_text_abalated.torch"))
-    relation_embed_head.load_state_dict(torch.load("fewshot_RLNHEAD_0_5e-05_16_abalated.torch"))
+    relation_embed.imagemodel.load_state_dict(torch.load(relationname_img))
+    relation_embed.textmodel.load_state_dict(torch.load(relationname_text))  
+    relation_embed_head.load_state_dict(torch.load(relationheadname))
     
     texts_dict_organised = {}
     for item in annotations["Text"]:
@@ -142,7 +155,8 @@ if __name__=="__main__":
                 
                 
             input_text = [texts_dict_organised[singlesample]]    # note that this is a LIST of strings. in this case there is only one string always. So we place into a list.
-            print(input_text)
+            if verbose:
+                print(input_text)
 
             relations_out_dict = {}
             sample_entity_report_dict = {}
@@ -285,7 +299,8 @@ if __name__=="__main__":
                 
                 
             full_report[imagefilepath] = [sample_entity_report_dict,relations_out_dict]
-            pprint.pprint(full_report[imagefilepath])
+            if verbose:
+                pprint.pprint(full_report[imagefilepath])
             full_report["overdupe"] = overdupe_accounting
             if split_dump:
                 if len(list(full_report.keys()))>500:

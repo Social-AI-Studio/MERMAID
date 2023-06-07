@@ -1,7 +1,7 @@
 import json
 import os
 
-
+# shrink or unshrink all jsons in the directory by changing the dump indentation.
 shrink = True
 if shrink:
     for i in os.listdir():
