@@ -1,7 +1,7 @@
 # Preprocessing of raw data and annotation
 
 That's what this folder is composed of. Allows you to recreate the data from scratch.
-
+Noteworthy : "mass_tokenizer_class.py" directly contains all the steps below in it's ```if __name__=="__main__"``` portion. You can look directly there.
 
 
 1. raw_data_jsons contains the pulling script. You will need selenium to pull. The selenium version should be 4.1.3. Be very careful about selenium versions they did major changes to syntax that don't transfer across major releases.
