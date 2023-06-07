@@ -1,0 +1,130 @@
+         
+         
+SG MEMES ANNOTATION.         
+         
+<View>
+  <Image name="image" value="$image"/>
+  <RectangleLabels name="label1" toName="image">
+          <Label value="Entity1_Box" background="green"/>
+              <Label value="Entity2_Box" background="blue"/>
+          <Label value="Entity3_Box" background="red"/>
+          <Label value="Entity4_Box" background="purple"/>
+          <Label value="Entity5_Box" background="orange"/>
+  </RectangleLabels>
+  <Header value="All Detected Text (Correct if required):"/>
+  <Text name="text" value="$all_text_in_image"/>
+  <Header value="OCR/Statement Corrections  (If correction is needed)"/>
+  	<Header value="A"/>
+  		<TextArea name="Entity1_original" toName="text" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
+        <TextArea name="Entity1_text" toName="text" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
+  	<Header value="B"/>
+
+ 	 	<TextArea name="Entity2_original" toName="text" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
+        <TextArea name="Entity2_text" toName="text" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
+  	<Header value="C"/>
+  		<TextArea name="Entity3_original" toName="text" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
+        <TextArea name="Entity3_text" toName="text" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
+  	<Header value="D"/>
+  		<TextArea name="Entity4_original" toName="text" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
+        <TextArea name="Entity4_text" toName="text" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
+  	<Header value="E"/>
+  		<TextArea name="Entity5_original" toName="text" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
+        <TextArea name="Entity5_text" toName="text" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
+  	<Choices name="REJECT" toName="image">
+      <Choice value="REJECT"/>
+      </Choices>
+</View>
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Second Annotation Cycle Interface setup.
+
+
+
+
+<View>
+        <Image name="image" value="$image"/>
+        <View style="display: grid;  grid-template-columns: 1fr; max-height: 500px; width: 80%; border-style: solid; align:center;">
+        <Relations>
+            <Relation value="Affirm/Favor"/>
+            <Relation value="Doubt/Disfavor"/>
+            <Relation value="Superior"/>
+            <Relation value="Equal"/>
+            <Relation value="Upgrade"/>
+            <Relation value="Degrade"/>
+            <Relation value="Indifferent"/>
+        </Relations>
+          <Labels name="creatorlabel" toName="creatortext">
+              <Label value="MEME CREATOR"/>
+          </Labels>
+          <Text name="creatortext" value="$memecreator" granularity="word"/>
+          </View>  
+          <View style="display: grid;  grid-template-columns: 1fr; max-height: 500px; width: 80%; border-style: solid; align:center;">
+          <Labels name="label1" toName="text1">
+            <Label value="Entity 1"/>
+            <Label value="Entity 2"/>
+            <Label value="Entity 3"/>
+            <Label value="Entity 4"/>
+            <Label value="Entity 5"/>
+            <Label value="Entity 6"/>
+          </Labels>
+          <Text name="text1" value="$text1" granularity="word"/>
+          </View>
+          <View style="display: grid;  grid-template-columns: 1fr; max-height: 500px; width: 80%; border-style: solid; align:center;">
+          
+          <Labels name="label2" toName="text2">
+            <Label value="Entity 1"/>
+            <Label value="Entity 2"/>
+            <Label value="Entity 3"/>
+            <Label value="Entity 4"/>
+            <Label value="Entity 5"/>
+            <Label value="Entity 6"/>
+          </Labels>
+          <Text name="text2" value="$text2" granularity="word"/>
+          
+            </View>
+          <View style="display: grid;  grid-template-columns: 1fr; max-height: 500px; width: 80%; border-style: solid; align:center;">
+            <Labels name="label3" toName="text3">
+            <Label value="Entity 1"/>
+            <Label value="Entity 2"/>
+            <Label value="Entity 3"/>
+            <Label value="Entity 4"/>
+            <Label value="Entity 5"/>
+            <Label value="Entity 6"/>
+          </Labels>
+          <Text name="text3" value="$text3" granularity="word"/>
+          
+            </View>
+          <View style="display: grid;  grid-template-columns: 1fr; max-height: 500px; width: 80%; border-style: solid; align:center;">
+            <Labels name="label4" toName="text4">
+            <Label value="Entity 1"/>
+            <Label value="Entity 2"/>
+            <Label value="Entity 3"/>
+            <Label value="Entity 4"/>
+            <Label value="Entity 5"/>
+            <Label value="Entity 6"/>
+          </Labels>
+          <Text name="text4" value="$text4" granularity="word"/>
+          
+            </View>
+          <View style="display: grid;  grid-template-columns: 1fr; max-height: 500px; width: 80%; border-style: solid; align:center;">
+            <Labels name="label" toName="text5">
+            <Label value="Entity 1"/>
+            <Label value="Entity 2"/>
+            <Label value="Entity 3"/>
+            <Label value="Entity 4"/>
+            <Label value="Entity 5"/>
+            <Label value="Entity 6"/>
+          </Labels>
+          <Text name="text5" value="$text5" granularity="word"/>
+          </View>
+          
+          <View style="display: grid;  grid-template-columns: 1fr; max-height: 500px; width: 80%; border-style: solid; align:center;">    
+          <Choices name="REJECTION" toName="image">
+            <Choice value="REJECT"/>
+          </Choices>
+          </View>
+        </View>
