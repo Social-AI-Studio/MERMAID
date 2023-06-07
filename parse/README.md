@@ -3,6 +3,7 @@
 That's what this folder is composed of. Allows you to recreate the data from scratch.
 Noteworthy : "mass_tokenizer_class.py" directly contains all the steps below in it's ```if __name__=="__main__"``` portion. You can look directly there.
 
+We include sample annotation files there. (Sans the Entity/Relation final annotation that is composed into the final dataset)
 
 1. raw_data_jsons contains the pulling script. You will need selenium to pull. The selenium version should be 4.1.3. Be very careful about selenium versions they did major changes to syntax that don't transfer across major releases.
 2. raw_data_jsons should contain "image_dir" and "template" folders. These contain your meme template files and your memes respectively.
@@ -23,7 +24,6 @@ Noteworthy : "mass_tokenizer_class.py" directly contains all the steps below in 
 9. If you want code that hard checks the total counts of relations and entities (to check it tallies with the published work), use: "count_dataset_values.py"
 10. To perform a run on the dataset with RAW OCR instead of corrected/grouped ocr, it is also possible if you've already trained a model. run "direct_OCR_result_vs_annotated_compile.py" to generate "OCR_valid_images_list.json", a json containing all images that have at least ONE entity correct in the OCR.
     * run "run_OCRBOX_as_textboxes.py" and you will obtain your results. Toggle the paths to the correct model inside.
-
 
 ### Important
 For all files, there is a variable: noposition. If True, the expected/trained model is a model with position values abalated.

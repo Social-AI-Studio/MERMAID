@@ -70,147 +70,7 @@ class EntityD():
 class EntityE():
     pass
 
-word_relationshipdict = {
-    1: [["'" , EntityC,  "' states that '" , EntityB,  "' is better than '" , EntityA,  "'" ],
-            ["'" , EntityC,  "' judges that '" , EntityB,  "' is better than '" , EntityA,  "'" ]],
-        
-    2: [["'" , EntityB,  "' is better than '" , EntityA,  "'"], 
-        ["'" , EntityB,  "' is superior to '" , EntityA,  "'"]],
-        
-    3: [["'" , EntityA,  "' is bad" ,"'" ],
-        [ EntityA,  "' is not good"]],
     
-    4: [["'" , EntityB,  "' states that '" , EntityA,  "' is bad" ],
-        ["'" , EntityB,  "' states that '" , EntityA,  "' is not good"]],
-        
-    5: [["'" , EntityB,  "' does not believe that '" , EntityA,  "' is true"],
-        ["'" , EntityB,  "' denies '" , EntityA,  "'" ]],
-    
-    6: [["'" , EntityB,  "' believes '" , EntityA,  "' is true."],
-        [EntityB, " affirms '" , EntityA,  "'"]],
-    
-    7: [["'" , EntityA,  "' is good."]],
-    
-    8: [["'" , EntityA,  "' and '" , EntityB,  "' are equal in value"],
-        ["'" , EntityA,  "' and '" , EntityB,  "' are similar."]],
-    
-    9: [["'" , EntityC,  "' judges that '" , EntityA,  "' and '" , EntityB,  "' are equal."]],
-    
-    10: [["'" , EntityA,  "' is good and '" , EntityB,  "' is bad’"],
-        [EntityB," is not good while '" , EntityA,  "' is good."]],
-    
-    11: [["'" , EntityA,  "' is bad." "'"] , 
-            [EntityA,  "' is not good."]],
-    
-    12: [["'" , EntityA,  "' is bad. '" , EntityB,  "' is good."], 
-        ["'" , EntityA,  "' is not good. '" , EntityB,  "' is good."]],
-    
-    13: [["'" , EntityC,  "' states that '" , EntityA,  "' is bad, and '" , EntityB,  "' is good."]],
-    
-    14: [["'" , EntityC,  "' states that '" , EntityA,  "' is not a good trait, but '" , EntityB,  "' is a good one."]],
-    
-    15: [["'" , EntityA,  "' says '" , EntityB,  "' is not good."],
-        ["'" , EntityA,  "' says '" , EntityB,  "' is bad."]],
-    
-    16: [["'" , EntityB,  "' is not good."]],
-    
-    17: [["'" , EntityA,  "' is true."]],
-    
-    18: [["'" , EntityC,  "' states '" , EntityA,  "' is good, and '" , EntityB,  "' is bad."]],
-    
-    19: [["'" , EntityB,  "' states that '" , EntityA,  "' is better than " , EntityC,  "."],
-        ["'" , EntityB,  "' says that " , EntityC,  " is worse than '" , EntityA,  "'."]],
-    
-    20: [["'" , EntityA,  "' and " , EntityC,  " are not good."]],
-    
-    21: [["'" ,EntityC, "'", "judges that" ,"'", EntityB,  "' is better than '" , EntityA,  "', which is better than '" , EntityD,  "'."],
-        ["'" ,EntityC, "'", "claims that" , "'",  EntityD,  "' is the worst, followed by '" , EntityA,  "', and then '" , EntityB,  "'"]],
-    
-    22: [["In order of decreasing value: '" , EntityA,  "', '" , EntityB,  "', " , EntityC,  ", '" , EntityD,  "'."],
-        ["In order of increasing value:'" , EntityD,  "','" , EntityC,  "','" , EntityB,  "','" , EntityA,  "'." ]],
-    
-    23: [["'" , EntityA,  "' devolves into '" , EntityB,  "', then " , EntityC,  ", and ends at '" , EntityD,  "'"]],
-    
-    24: [["'" , EntityA,  "' claims '" , EntityB,  "' is good while " , EntityC,  " is not."]],
-    
-    25: [["'" , EntityA,  "' and '" , EntityB,  "' both agree " , EntityC,  " is good."],
-        ["'" , EntityA,  "' and '" , EntityB,  "' both have a positive opinion of " , EntityC,  ""]],
-    
-    26: [["'" , EntityB,  "' says that '" , EntityA,  "' is better than " , EntityC,  "."],
-        ["'" , EntityB,  "' claims '" , EntityA,  "' is better than " , EntityC,  "."]],
-    
-    27: [["'" , EntityA,  "' claims that '" , EntityB,  "' and " , EntityC,  " are equal in value."]],
-    
-    28: [["'" , EntityA,  "' states that " , EntityC,  " is good."],
-        ["'" , EntityA,  "' has a positive sentiment towards " , EntityC,  "."]],
-    
-    29: [["'" , EntityB,  "' claims that " , EntityC,  " is good."],
-        ["'" , EntityB,  "' has a positive sentiment towards " , EntityC,  "."]],
-    
-    30: [["'" , EntityC,  "' is the best of the three, followed by '" , EntityB,  "' and '" , EntityA,  "'."],
-        ["In order of increasing value or positive sentiment, '" , EntityA,  "','" , EntityB,  "','" , EntityC,  "'."]],
-    
-    31: [[" Beginning with '" , EntityA,  "', we continue a good process by taking steps '" , EntityB,  "' and " , EntityC,  "."]],
-    
-    32: [["'" , EntityA,  "' is better than '" , EntityB,  "'"]],
-    
-    33: [["'",EntityA,"' has a negative sentiment towards both","'",EntityB,"' and '", EntityC,"'"]],
-    
-    34: [["'", EntityC, "' has a positive sentiment to performing '", EntityA, "' and '", EntityB, "'"],
-        ["'", EntityC, "' is happy to do both '", EntityA, "' and '", EntityB, "'"]],
-    
-    35:[["'",EntityA,"' is good, but when continued by '",EntityB,"' it no longer is good."]],
-    
-    36:[["'",EntityB, "' states that '",EntityA, "' and '", EntityC, "'are bad."],
-        ["'",EntityB, "' judges that '",EntityA, "' and '", EntityC, "'are bad."]],
-    
-    37:[["'",EntityB, "' states that '",EntityA, "' is bad, but '", EntityC, "' is good."],
-        ["'",EntityB, "' judges that '",EntityA, "' and '", EntityC, "'are bad."]],
-    
-    38:[["From '", EntityC, "' perspective: continuing with'", EntityA, "' is good, but continuing with '", EntityB, "' is bad"]],
-    }
-    
-    
-sym_relationshipdict = {
-    1: "<B,A,Better than,0> <C,A, Judgement,0> <C,B, Judgement,0>",
-    2: "<B,A,Better than,0> B is better than A. Neutral.",
-    3: "<A,NIL,Statement,-> A is bad.",
-    4: "<B,A,Statement,-> B states that A is bad.",
-    5: "<B,A,Deny,->   B Denies A. negative sentiment.",
-    6: "<B,A,Affirm,+> B affirms A. Positive Sentiment.",
-    7: "<A,NIL,Statement,+> A is good.",
-    8: "<A,B, equivalence,0> A and B are equal.  ",
-    9: "<A,B, equivalence,0> A and B are equal.  <C,A, Judgement,0> <C,B, Judgement,0> C is the one making the judgement.",
-    10: "<A,NIL,Statement,+> <B,NIL,Statement,->",
-    11: "<A,NIL,Statement,-> A is bad.",
-    12: "<A,NIL,Statement,-> <B,NIL,Statement,+>",
-    13: "<C,A,Statement,-> <C,B,Statement,+>",
-    14: "<C,A,Trait,-> <C,B,Trait,+>",
-    15: "<A,B,Statement,->",
-    16: "<B,NIL,Statement,->",
-    17: "<A,NIL,Affirm,+>",
-    18: "<C,A,Statement,+> <C,B,Statement,->",
-    19: "<A,C,Better than,0> <B,A,Judgement,0> <B,C,Judgement,0>",
-    20: "<A,NIL,Statement,-> <C,NIL,Statement,->",
-    21: "<B,A,Better than,0> <A,D,Better than,0> <C,A,Judgement,0> <C,B,Judgement,0> <C,D,Judgement,0>   Indirectly creates D<A<B <D,B,Better than,0>",
-    22: "<B,A,Better than,0> <C,B,Better than,0> <D,C,Better than,0>",
-    23: "<A,B,Continuation,-> <B,C,Continuation,-> <C,D,Continuation,->",
-    24: "<A,B,Statement,+> <A,C,Statement,->",
-    25: "<A,C,Affirm,+> <B,C,Affirm,+>",
-    26: "<A,C,Better than,0> <B,A, Judgement,0> <B,C, Judgement,0>",
-    27: "<B,C,equivalent,0> <A,B,Judgement,0> <A,C,Judgement,0>",
-    28: "<A,C,Statement,+> B might not exist.",
-    29: "<B,C,Statement,+> A might not exist",
-    30: "<B,A,Better than,0> <C,B,Better than,0>",
-    31: "<A,B,Continuation,+> <B,C,Continuation,+>",
-    32: "<A,B,Better than,0>",
-    33: "<A,B,Statement,-> <A,C,Statement,->",
-    34: "<C,A,Continuation,0> <C,B,Continuation,0> Essentially, 'C does A and B'",
-    35: "<A,NIL,Statement,0>, <A,B,Continuation,->, <B,NIL,Statement,->",
-    36: "<B,A,Statement,-> <B,C,Statement,->",
-    37: "<B,A,Statement,-> <B,C,Statement,+>",
-    38: "<C,A,Continuation,+> <C,B,Continuation,->"
-}
 
 master_dict = {
     "Anime-Girl-Hiding-from-Terminator":[4,15],
@@ -586,12 +446,8 @@ def initial_OCR_labelstudio_generator(data_dir = "raw_data_jsons", data_dir_dump
     for idx in entity_workdirnames:
         entity_workdirnames[idx] = os.path.join(workingdir,entity_workdirnames[idx])
     
-    if os.path.exists("allfilesusedthusfar.json"):
-        with open("allfilesusedthusfar.json","r",encoding="utf-8") as used_filesopenfile:
-            all_usedfiles = json.load(used_filesopenfile)
-        all_usedfiles = set(all_usedfiles)
-    else:
-        all_usedfiles = set()
+
+    all_usedfiles = set()
         
     target_candidates = []
     for i in os.listdir(data_dir):
@@ -705,32 +561,7 @@ def initial_OCR_labelstudio_generator(data_dir = "raw_data_jsons", data_dir_dump
     print("items:",len(proposed_json))
     with open(dump_target,"w",encoding="utf-8") as dumpfile:
         json.dump(proposed_json,dumpfile,indent=4)
-    print("Completed. Removing allfilesusedthusfar.json")
-    os.remove("allfilesusedthusfar.json")
-    # <View>
-      # <Image name="image" value="$image"/>
-      # <Header value="Select if the meme usage is literal/no actual entities/events are mentioned. Else select NIL. (Leave all other fields blank if meme usage was literal.)"/>
-      # <Choices name="Accept" toName="image" choice="single" required="true">
-            # <Choice value="Accept"/>
-            # <Choice value="Reject"/>
-      # </Choices>
-        # <Header value="OCR/Statement Corrections"/>
-        # <Header value="A"/>
-            # <Choices name="A" toName="image" choice="multiple" value="$alloptions"/>
-            # <TextArea name="A_true" toName="image" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
-        # <Header value="B"/>
-            # <Choices name="B" toName="image" choice="multiple" value="$alloptions"/>
-            # <TextArea name="B_true" toName="image" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
-        # <Header value="C"/>
-            # <Choices name="C" toName="image" choice="multiple" value="$alloptions"/>
-            # <TextArea name="C_true" toName="image" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
-        # <Header value="D"/>
-            # <Choices name="D" toName="image" choice="multiple" value="$alloptions"/>
-            # <TextArea name="D_true" toName="image" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
-        # <Header value="E"/>
-            # <Choices name="E" toName="image" choice="multiple" value="$alloptions"/>
-            # <TextArea name="E_true" toName="image" placeholder="Correction Here" editable="true" maxSubmissions="1"/>
-    # </View>
+
 
 
 
@@ -923,7 +754,8 @@ def generate_boundingbox_correction_json(data_dir="raw_data_jsons",data_dir_dump
         
                 
         
-        
+        if not os.path.exists(filepath): # check for image existence. Removal means invalid from final publish.
+            continue 
         with Image.open(filepath) as im:
             pulled_image_width, pulled_image_height = im.size
 
@@ -2512,7 +2344,6 @@ if __name__=="__main__":
     # Annotate the bounding boxes and tehn export from label studio. Place the output file as the argument below.
     
     
-    
     #Step 3
     parse_boundingboxes_fixed("Annotated_BoundingBox_Corrections.json") # utility function used within the relation annotation json generator. tests for export issues.
     relation_annotation_json_generator(fixed_boundingbox_results="Annotated_BoundingBox_Corrections.json",dumptarget = "label_studio_reference_input_Relations_Entities.json")
@@ -2521,8 +2352,8 @@ if __name__=="__main__":
     
     #Step 4
     relationshipfinal_output_parser("Annotated_Final.json",target_savefile="Processed_annotations.json")
-    final_dataset_generator = dataset_information_generation_class(importfile=os.path.join("parse","Processed_annotations.json"), dumpdir = os.path.join("parse","raw_data_jsons","image_dir"), target_tokeniser=False,approved_images=[],verbose=False,use_templates=False,template_dir="templates")
-    final_dataset_generator.dump_dataset(targetfile = "final_dataset_cleared.json")
+    final_dataset_generator = dataset_information_generation_class(importfile="Processed_annotations.json", dumpdir = os.path.join("raw_data_jsons","image_dir"), target_tokeniser=False,approved_images=[],verbose=False,use_templates=False,template_dir="templates")
+    final_dataset_generator.dump_dataset(targetfile = "final_dataset_cleared_NON_CLEARED.json")
     quit()
         
 
