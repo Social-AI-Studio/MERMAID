@@ -2,7 +2,7 @@ import json
 import torch
 import pprint
 from numpy import argsort
-from dataset_class import dual_dataset, entity_error_analysis, dataset_list_split
+from model_dataset_class import dual_dataset, entity_error_analysis, dataset_list_split
 
 remapped_actionables_dict = {
 "Superior":0,
@@ -29,70 +29,13 @@ if __name__=="__main__":
     
     fewshot_ks = 20
     
-    # alternate fewshot, Data2vec
-    # targetfile = "fewshot_"+str(fewshot_ks)+"_innate_epoch_29_predictiondict_test_BERT_firstrun___data2vec_firstrun_firstrun.json"
-    # targetfile = "fewshot_20_innate_epoch_29_predictiondict_test_BERT_secondrun___CLIP_secondrun_secondrun.json"
-
-    # targetfile = "fewshot_0_1e-05_4_innate_epoch_28_predictiondict_test_BERT_all_templates_no_fewshot_position_abalated___CLIP_all_templates_no_fewshot_position_abalated_all_templates_no_fewshot_position_abalated.json"
-    # ALTERNATE FEWSHOT
-    # targetfile = "fewshot_"+str(fewshot_ks)+"_innate_epoch_29_predictiondict_test_BERT_starter___CLIP_starter_starter.json"
-    # targetfile = "fewshot_"+str(fewshot_ks)+"_innate_epoch_29_predictiondict_train_BERT_starter___CLIP_starter_starter.json"
-    
-    
-    
-    # NORMAL FEWSHOT
-    
-    
-    # targetfile = "fewshot_"+str(fewshot_ks)+"_innate_epoch_4_predictiondict_train_BERT_starter___CLIP_starter_29_starter.json"
-    # targetfile = "fewshot_"+str(fewshot_ks)+"_innate_epoch_4_predictiondict_test_BERT_starter___CLIP_starter_29_starter.json"
-    
-    
-    
-    # TRUE NORMAL
-    
-    # targetfile = "predictiondict_train_RoBERTa_starter___data2vec_starter_" + str(idx) + "_starter.json"
-    # targetfile = "predictiondict_test_RoBERTa_starter___data2vec_starter_" + str(idx) + "_starter.json"
-    
-    # targetfile = "predictiondict_train_RoBERTa_starter___CLIP_starter_" + str(idx) + "_starter.json"
-    # targetfile = "predictiondict_test_RoBERTa_starter___CLIP_starter_" + str(idx) + "_starter.json"
-    
-    # targetfile = "predictiondict_train_RoBERTa_starter___flava_starter_"+str(idx)+"_starter.json"
-    # targetfile = "predictiondict_test_RoBERTa_starter___flava_starter_"+str(idx)+"_starter.json"
-    
-    # targetfile = "predictiondict_train_RoBERTa_starter___BLIP_starter_" + str(idx) + "_starter.json"
-    # targetfile = "predictiondict_test_RoBERTa_starter___BLIP_starter_" + str(idx) + "_starter.json"
-    
-    
-    
-    
-    # targetfile = "predictiondict_train_BERT_starter___BLIP_starter_" + str(idx) + "_starter.json"
-    # targetfile = "predictiondict_test_BERT_starter___BLIP_starter_" + str(idx) + "_starter.json"
-    
-    
-    # targetfile = "predictiondict_train_BERT_starter___CLIP_starter_"+str(idx)+"_starter.json"
-    # targetfile = "predictiondict_test_BERT_starter___CLIP_starter_"+str(idx)+"_starter.json"
-    
-    
-    # targetfile = "predictiondict_train_BERT_starter___data2vec_starter_"+str(idx)+"_starter.json"
-    # targetfile = "predictiondict_test_BERT_starter___data2vec_starter_"+str(idx)+"_starter.json"
-    
-    # targetfile = "predictiondict_train_BERT_starter___flava_starter_"+str(idx)+"_starter.json"
-    # targetfile = "predictiondict_test_BERT_starter___flava_starter_"+str(idx)+"_starter.json"
-    
-    # targetfile = "predictiondict_test_"+str(idx)+"_starter.json"
-    # targetfile = "predictiondict_train_"+str(idx)+"_starter.json"
-    
-    # targetfile = "fewshot_0_1e-05_4_29_predictiondict_test_original.json"
-
-    
-    # targetfile = "Fewshot_fewshot_0_5e-05_16_29_predictiondict_test_original.json"
-    targetfile = "Fewshot_fewshot_0_5e-05_16_29_predictiondict_test_position_abalated.json"
+    targetfile = "example_prediction_dict_json.json"
     print(targetfile)
     
     mean_average_precision_dict = {}
     
     if perform_smartstrike:
-        bestguesser = dataset_list_split("final_dataset.json",0.6,[],return_smartstrike=True)
+        bestguesser = dataset_list_split("final_dataset_cleared.json",0.6,[],return_smartstrike=True)
     
     with open(targetfile,"r",encoding="utf-8") as openedfile:
         loaded_results = json.load(openedfile)
@@ -102,7 +45,7 @@ if __name__=="__main__":
         allowed_images.append(sourceimages)
     
     
-    dataset_main = dual_dataset("final_dataset.json",target_tokeniser=["bert","roberta"],verbose=False,approved_images=allowed_images)
+    dataset_main = dual_dataset("final_dataset_cleared.json",target_tokeniser=["bert","roberta"],verbose=False,approved_images=allowed_images)
     
     totalentities = 0
     pureentities = 0

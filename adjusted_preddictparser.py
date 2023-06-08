@@ -4,7 +4,7 @@ import torch
 import pprint
 import csv
 from numpy import argsort
-from dataset_class import dual_dataset, entity_error_analysis, dataset_list_split
+from model_dataset_class import dual_dataset, entity_error_analysis, dataset_list_split
 
 remapped_actionables_dict = {
 "Superior":0,
@@ -17,6 +17,11 @@ remapped_actionables_dict = {
 "Inferior":7,
 "NULL":8,
 }
+# Plots out the performances of your model given a directory that contains multiple "predictiondict" s
+
+#Outputs into a CSV file. Useful for comparisons of the model.
+# To test the capability, copy and paste multiple "example_prediction_dict_json.json" into a directory, and point the target directory below to that directory.
+
 if __name__=="__main__":
     relationthreshold = 0.5
     entitythreshold = 0.5
@@ -26,6 +31,8 @@ if __name__=="__main__":
     entity_model = "bert"
     # entity_model = "roberta"
     targetdir = "results_prata"
+    
+    
     flipped_actiondict = {i:k for k,i in remapped_actionables_dict.items()}
     computed_results_dict = {
         "Learning Rate":[],
@@ -66,7 +73,7 @@ if __name__=="__main__":
         mean_average_precision_dict = {}
         
         if perform_smartstrike:
-            bestguesser = dataset_list_split("final_dataset.json",0.6,[],return_smartstrike=True)
+            bestguesser = dataset_list_split("final_dataset_cleared.json",0.6,[],return_smartstrike=True)
         
         with open(os.path.join(targetdir,targetfile),"r",encoding="utf-8") as openedfile:
             loaded_results = json.load(openedfile)
@@ -76,7 +83,7 @@ if __name__=="__main__":
             allowed_images.append(sourceimages)
         
         
-        dataset_main = dual_dataset("final_dataset.json",target_tokeniser=["bert","roberta"],verbose=False,approved_images=allowed_images)
+        dataset_main = dual_dataset("final_dataset_cleared.json",target_tokeniser=["bert","roberta"],verbose=False,approved_images=allowed_images)
         
         totalentities = 0
         pureentities = 0

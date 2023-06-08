@@ -1,0 +1,73 @@
+Structure of Dataset.
+
+For reference: (Relationships and the number they are referred to in the dataset.)
+    {
+        "Superior":0,
+        "Equal":1,
+        "Upgrade":2,
+        "Degrade":3,
+        "Affirm/Favor":4,
+        "Doubt/Disfavor":5,
+        "Indifferent":6,
+        "Inferior":7,
+        "NULL":8,
+    }
+
+Entities are indicated by two flags on every token. (ENTITYSTART, ENTITYEND). For an entity to be considered correct it must have both flags correct and no incorrect flags in between the start and stop.
+If an entity only has takes one token, ENTITYSTART and ENTITYEND must be flagged for that single token.
+
+
+
+[
+    "text_locs": {
+        "text1": {"height","width","x","y"},   # (0,0) is located on the top left. +ve Rightwards and Downwards.
+        "text2": {"height","width","x","y"},
+        ...
+    },
+    
+    "correct_answers":{
+        "text1": {"bert","roberta","clip","data2vec","vilt","vilbert","blip","blip2","ACTUAL_TEXT"},  # where an list of lists of size 2 [[0,0],[1,0],[0,0]....[0,1]] shows the expected outputs for each token in entity detection for each unique tokeniser type. Note that Special tokens [CLS] and [SEP] etc. are included in this array.
+        "text2": {"bert","roberta","clip","data2vec","vilt","vilbert","blip","blip2","ACTUAL_TEXT"},
+        ...
+    },
+    
+    "span_answers":{
+        "text1":{"bert","roberta","clip","data2vec","vilt","vilbert","blip","blip2"}, # indicates which entities start and end at which tokens. If there is only a single mention of the entity, it only takes up one token. If there are two, it indicates the start and stop tokens.
+        "text2":{"bert","roberta","clip","data2vec","vilt","vilbert","blip","blip2"}, # Uses Entity IDs. see "actual_entities" below.
+        ...
+    },
+    
+    "equivalent_entities":[
+        (ENTITY1,ENTITY2),      #Indicates which of the two entities are equivalent to each other. Uses Entity IDs. see "actual_entities" below. (i.e in the meme they refer to the same item. As many tuples as there are equivalent entities annotated).
+    ],
+    
+    "relationships_read":{
+        "Affirm/Favor":[ [ENTITY1,ENTITY2], [ENTITY2,ENTITY3]... etc],   # Read as: Entity 1 favors/affirms Entity2,    Entity2 affirms/favors Entity3 etc.
+        "Superior":[ [ENTITY2,ENTITY1]... etc], etc.  # In all cases, the first entity can be seen as "Sender" and the second entity the recipient of a relationship.
+    },
+    
+    "relationship_num":{
+        4::[ [ENTITY1,ENTITY2], [ENTITY2,ENTITY3]... etc], # numerical version of relationships_read. { "Superior":0, "Equal":1, "Upgrade":2, "Degrade":3, "Affirm/Favor":4, "Doubt/Disfavor":5, "Indifferent":6, "Inferior":7, "NULL":8}
+        0:[ [ENTITY2,ENTITY1]... etc],
+    },
+    
+    "source_image":"-----.jpg",  # stores the actual image file associated with this meme.
+    
+    "image_addr":"------.jpg", # stores the relative file path associated with this image. Not used in the code directly. If the annotation was compiled by you, can be used to check for correct relative filepaths.
+    
+    "meme_creator": null OR ID. # Stores the meme creator's id. If this meme doesn't use a meme creator entity, contains a None.
+    
+    "tokenised_strings":{
+        "text1":{"bert","roberta","clip","data2vec","vilt","vilbert","blip","blip2","input_text"}, # Records the tokenised versions of the strings. Crucially, does not contain the special tokens like [CLS] and [SEP]
+        "text2":{"bert","roberta","clip","data2vec","vilt","vilbert","blip","blip2","input_text"},
+        ...
+    },
+    
+    "actual_entities":{
+        [ENTITY_ID, "textbox origin", Entity Text], # contains the mapping between an Entity ID and the textbox from which it originates (text1,text2,etc.) and also the actual text associated with the entity.
+        ...
+    }
+    
+    "archetype": "Buff-Doge-vs-Cheems" # saves the meme archetype for this particular meme. Important for accounting accuracy between meme types.
+
+}
