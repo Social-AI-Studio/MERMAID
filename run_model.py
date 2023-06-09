@@ -138,7 +138,6 @@ if __name__=="__main__":
                 # calculated by proportion of total number of that relationship.
                 
                 binary_sample_loss = torch.nn.BCEWithLogitsLoss() # we should use this in reality.
-                # cross_entropy_loss = torch.nn.CrossEntropyLoss()
                 
                 relation_embed = CLIP_preparation(prefix,device)
                 # relation_embed = data2vec_preparation(prefix,device)
@@ -155,12 +154,11 @@ if __name__=="__main__":
 
 
                 
-                # fewshottest_constructor = [i for i in list(standard_imagesize_dict.keys()) if not i in leaveouts]
                 
                 relationscheduler = StepLR(relationheadoptimizer, step_size=relation_scheduler_stepsize, gamma=0.5) # every x epochs, We REDUCE learning rate.
                 entityscheduler = StepLR(entityheadoptimizer, step_size=entity_scheduler_stepsize, gamma=0.5) # every x epochs, We REDUCE learning rate.
                 
-                original_train_imglist,original_test_imglist  = dataset_list_split(labels_file,0.6,[])
+                original_train_imglist,original_test_imglist  = dataset_list_split(labels_file,0.7,[])
                 
             
                 print("Current target n:", target_n, "   RELOADING WEIGHTS")
@@ -168,7 +166,7 @@ if __name__=="__main__":
                 
                 if target_n==0:
                     if non_involved_templates:
-                        fewshot_removal_list1, fewshot_removal_list2 = dataset_list_split(labels_file,0.6,non_involved_templates,minimal_n=target_n,approved_images=original_train_imglist)
+                        fewshot_removal_list1, fewshot_removal_list2 = dataset_list_split(labels_file,0.7,non_involved_templates,minimal_n=target_n,approved_images=original_train_imglist)
                         for removed_instance in fewshot_removal_list1:
                             original_train_imglist.remove(removed_instance)
                         for removed_instance in fewshot_removal_list2:
@@ -176,16 +174,11 @@ if __name__=="__main__":
                     else:
                         pass
                 else:
-                    fewshot_train_img_candidates, fewshot_removal_list  = dataset_list_split(labels_file,0.6,non_involved_templates,minimal_n=target_n,approved_images=original_train_imglist)
+                    fewshot_train_img_candidates, fewshot_removal_list  = dataset_list_split(labels_file,0.7,non_involved_templates,minimal_n=target_n,approved_images=original_train_imglist)
                     for removed_instance in fewshot_removal_list:
                         original_train_imglist.remove(removed_instance)
                 
-                
-                
-                # fewshottrain_img_list,fewshottest_img_list  = dataset_list_split("ZZZZ_completed_processed_fullabels_shaun.json",1,non_involved_templates,minimal_n=target_n,approved_images=original_train_imglist)
-                
-                # print("Fewshot train image list:",len(fewshottrain_img_list))
-                # print("Fewshot test image list:",len(fewshottest_img_list))
+
                 fewshottrain_meme_dataset = dual_dataset(labels_file,target_tokeniser=[entity_embed.model_type,relation_embed.model_type],approved_images=original_train_imglist)
                 fewshottest_meme_dataset = dual_dataset(labels_file,target_tokeniser=[entity_embed.model_type,relation_embed.model_type],approved_images=original_test_imglist)
                 print("fewshot train length:",len(fewshottrain_meme_dataset),"fewshot test length:",len(fewshottest_meme_dataset))
@@ -259,36 +252,22 @@ if __name__=="__main__":
                                 entity_correctness_counter = 0
                                 total_entities = 0
                                 entity_pure_correctness_counter = 0
-                                # print(torch.cuda.memory_allocated(), torch.cuda.max_memory_allocated())
                                 batchtimer = time.time()
                                 all_input_format = []
                                 for singlesample in data_out:
-                                    # print("-"*30)
                                     fewshotrelation_loss_sum = 0
                                     fewshotentity_loss_sum = 0
-                                    # print("equivalent entities:",singlesample["equivalent_entities"])
                                     entity_source_pair = []
                                     sample_entity_report_dict = {}
                                     vectorattachment = text_vector_dataset_extractor(singlesample,device)
                                     imagesample = os.path.join(data_dir,singlesample["source_image"])
                                     for textname in vectorattachment:
-                                        # print(vectorattachment[textname]["text"])
                                         textembeds,_ = entity_embed([vectorattachment[textname]["text"]])
                                         vectorattachment[textname][entity_embed.model_name] = textembeds[0]
                                         vectorattachment[textname]["entity_head_output"] = entity_embed_head(vectorattachment[textname][entity_embed.model_name]["last_hidden_state"]).squeeze()
-                                        # vectorattachment[textname]["entity_head_output"] = torch.ones([len(singlesample["correct_answers"][textname][entity_embed.model_type]),2]).to(device)
-                                        
-                                        # wordlist = []
-                                        # for entitypart in _["input_ids"][0]:
-                                            # wordlist.append(entity_reference_vocab_dict[int(entitypart)])
-                                        # print(wordlist)
-                                        # print("0"*30)
-                                        
-                                        # print(len(vectorattachment[textname]["entity_head_output"]), len(singlesample["correct_answers"][textname][entity_embed.model_type]),len(singlesample["span_answer"][textname][entity_embed.model_type]))
-                                        # print(entity_embed.model_type)
+
+
                                         if entity_embed.model_type=="gpt_neo_SINGLISH":
-                                            # print(len(vectorattachment[textname]["entity_head_output"]))
-                                            # print(vectorattachment[textname]["entity_head_output"].shape)
                                             if len(vectorattachment[textname]["entity_head_output"].shape)==1:
                                                 vectorattachment[textname]["entity_head_output"] = vectorattachment[textname]["entity_head_output"].unsqueeze(0)
                                             # print(len(singlesample["correct_answers"][textname][entity_embed.model_type][1:-1]))
@@ -305,7 +284,6 @@ if __name__=="__main__":
                                         # continue
                                         
                                         indicators = entity_embed_head.sigmoid(vectorattachment[textname]["entity_head_output"])
-                                        # print(indicators)
                                         
                                         sample_entity_report_dict[textname] = {"entity_report":entity_report,
                                                 "loss":entity_loss.item(),
@@ -315,22 +293,15 @@ if __name__=="__main__":
                                                 "text":vectorattachment[textname]["text"]}
                                         
                                         
-                                        # print("predicted version")
                                         predicted_entity_indexes = threshold_entity_extractor(vectorattachment[textname]["entity_head_output"][1:-1],entity_threshold) # predicted version
-                                        # print("actual version")
-                                        # print(singlesample["correct_answers"][textname][entity_embed.model_type][1:-1])
                                         correct_entity_indexes = threshold_entity_extractor(singlesample["correct_answers"][textname][entity_embed.model_type][1:-1],entity_threshold) # true version
-                                        # print(correct_entity_indexes)
                                         
-                                        # print(singlesample["correct_answers"][textname][entity_embed.model_type])
                                         detected_entities = []
-                                        # print(singlesample["tokenised_strings"][textname]["input_text"])
                                         for entityindexset in correct_entity_indexes:
                                             wordlist = []
                                             for entitypart in entityindexset:
                                                 wordlist.append(entity_reference_vocab_dict[singlesample["tokenised_strings"][textname][entity_embed.model_type][entitypart]])
                                             detected_entities.append(wordlist)
-                                        # print(detected_entities)
                                         corrected_entity_string = []
                                         for entity in detected_entities:
                                             finalstring = ""
@@ -341,35 +312,27 @@ if __name__=="__main__":
                                                     finalstring+=" "
                                                     finalstring+=stringpart
                                             corrected_entity_string.append(finalstring)
-                                        # print(corrected_entity_string)
                                         entity_source_pair.append([corrected_entity_string,textname])
-                                    # print(vectorattachment)                    
-                                    # print(vectorattachment[textname][entity_embed.model_name]["last_hidden_state"].shape)
-                                    # print(vectorattachment[textname]["entity_head_output"].shape)
-                                        
+
                                     all_input_format.append(vectorattachment)
                                     # continue
                                     
                                     all_entities = []
-                                    # pprint.pprint(singlesample)
                                     if guidance:
                                         for sourcetrio in singlesample["actual_entities"]:   # id, which box, actual text # use id to track what the correct relationship is.
                                             targetid, originbox, entity_text = sourcetrio
-                                            # print(entity_text)
                                             if originbox==None: # is MEME_CREATOR
                                                 if noposition:
                                                     single_input = {"text":relation_embed_head.text_parameter,"image":relation_embed_head.image_parameter}
                                                 else:
                                                     single_input = {"text":relation_embed_head.text_parameter,"image":relation_embed_head.image_parameter,"position":relation_embed_head.position_parameter}
-                                                # single_input = {"text":relation_embed_head.text_parameter,"image":relation_embed_head.image_parameter,"position":relation_embed_head.position_parameter}
                                                 all_entities.append(["MEME_CREATOR",single_input,"MEME_CREATOR","MEME_CREATOR"])
                                                 continue
                                                 
                                             elif relation_embed.word_only and not noposition:
                                                 outputs = relation_embed([entity_text])
                                                 textlist, _ = outputs
-                                                # print(textlist.shape) 
-                                                # print(imageembed_outputs.shape)
+
                                                 textlist = textlist[0]["pooler_output"]
                                                 positional_vector = singlesample["text_locs"][originbox][0]["vector"]
                                                 single_input = {"text":textlist,"position":positional_vector}
@@ -378,23 +341,18 @@ if __name__=="__main__":
                                                 outputs = relation_embed([entity_text])
                                                 textlist, _ = outputs
                                                 textlist = textlist[0]["pooler_output"]
-                                                # print(textlist.shape) 
-                                                # print(imageembed_outputs.shape)
                                                 positional_vector = singlesample["text_locs"][originbox][0]["vector"]
                                                 single_input = {"text":textlist}
                                             
                                             else: 
                                                 outputs = relation_embed([entity_text], os.path.join(data_dir, singlesample["source_image"]))
                                                 textlist, imageembed_outputs = outputs
-                                                # print(imageembed_outputs)
-                                                # print(textlist)
                                                 textlist = textlist[0]["pooler_output"]
                                                 imageembed_outputs = imageembed_outputs["last_hidden_state"]
                                                 positional_vector = singlesample["text_locs"][originbox][0]["vector"]
                                                 single_input = {"text":textlist,"image":imageembed_outputs.squeeze(),"position":positional_vector}
 
-                                                # print(textlist.shape) 
-                                                # print(imageembed_outputs.shape)
+
                                             
                                             all_entities.append([targetid,single_input,entity_text,originbox])
                                             
@@ -415,9 +373,7 @@ if __name__=="__main__":
                                             textlist = textlist[0]["pooler_output"]
                                             imageembed_outputs = imageembed_outputs["last_hidden_state"]
                                             positional_vector = singlesample["text_locs"][originbox][0]["vector"]
-                                            # print(textlist.shape) 
-                                            # print(imageembed_outputs.shape)
-                                            
+
                                             if noposition and relation_embed.word_only:
                                                 single_input = {"text":textlist}
                                             elif not noposition and relation_embed.word_only:
@@ -426,30 +382,19 @@ if __name__=="__main__":
                                                 single_input = {"text":textlist,"image":imageembed_outputs.squeeze(),"position":positional_vector}
                                             
                                             all_entities.append(["NO_ID",single_input,entity_text,originbox])
-                                        # print(relation_internal_parameter.shape)
-                                        # print(single_input.shape)
-                                        
+
                                     
                                     all_possible_pairs = list(itertools.permutations(all_entities, 2))
-                                    # print(all_possible_pairs)
                                     
-                                    
-                                    # print("entity list:",all_entities)
-                                    # print("inverted_numerical_relationships:",singlesample["inverted_numerical_relationships"])
-                                    # print("all possible pairs:",all_possible_pairs)
                                     allinputvectors = {"image1":[],"position1":[],"text1":[], "image2":[],"position2":[],"text2":[]}
                                     for dual in all_possible_pairs:
                                         for dictionary_key in dual[0][1]:
                                             allinputvectors[dictionary_key+str(1)].append(dual[0][1][dictionary_key])
                                         for dictionary_key in dual[1][1]:
                                             allinputvectors[dictionary_key+str(2)].append(dual[1][1][dictionary_key])
-                                    # pprint.pprint(allinputvectors)
                                     all_relation_outputs = relation_embed_head(allinputvectors["image1"],allinputvectors["position1"],allinputvectors["text1"], allinputvectors["image2"],allinputvectors["position2"],allinputvectors["text2"])
                                     relation_prediction_result_dict = {}
                                     for pair_idxes in range(len(all_possible_pairs)):
-                                        
-                                        # print("checked a pair...")
-                                        # print(pair_output) # [targetid,single_input,entity_text,originbox]
                                         
                                         pair_output = all_possible_pairs[pair_idxes]
                                         relation_prediction = all_relation_outputs[pair_idxes]
@@ -461,14 +406,10 @@ if __name__=="__main__":
                                         
                                         try:
                                             if pair_output[0][0]=="MEME_CREATOR":
-                                                # print("MEME1")
                                                 correct_target = singlesample["inverted_numerical_relationships"][(meme_creator_id,pair_output[1][0])]
                                             elif pair_output[1][0]=="MEME_CREATOR":
-                                                # print("failure in dataset")
                                                 continue # we don't have any memes that have a reaction TOWARDS the meme creator. it's always the other way round.
-                                                # correct_target = singlesample["inverted_numerical_relationships"][(pair_output[0][0],meme_creator_id)]
                                             else:
-                                                # print("reg")
                                                 correct_target = singlesample["inverted_numerical_relationships"][(pair_output[0][0],pair_output[1][0])]
                                         except KeyError:
                                             print((pair_output[0][0],meme_creator_id,pair_output[1][0]))
@@ -481,16 +422,9 @@ if __name__=="__main__":
                                         if guidance:
                                         
                                             targettensor = torch.zeros(relation_prediction.shape).unsqueeze(0)
-                                            # print(targettensor.shape)
-                                            # input()
-                                            # print(correct_target)
                                             for relationtype in correct_target:
                                                 targettensor[0][relationtype] = 1
                                             sigmoided_version = relation_embed_head.sigmoid(relation_prediction)
-
-                                            # print("prediction:",relation_prediction.shape)
-                                            # print("target:",targettensor.shape)
-                                            # input()
                                             relationloss = relational_binary_sample_loss(relation_prediction.unsqueeze(0),targettensor.to(device))
                                             fewshotrelation_loss_sum+=relationloss
                                             
@@ -498,15 +432,11 @@ if __name__=="__main__":
                                             for idx in range(len(sigmoided_version)):
                                                 if sigmoided_version[idx]> relation_threshold:
                                                     selected_relations.append(idx)
-                                            # print(selected_relation,correct_target)
-                                            # input()
                                             for targetidx in range(len(targettensor.squeeze())):
                                                 if targettensor.squeeze()[targetidx]==1: # if there's supposed to be arelation here...
                                                     if sigmoided_version[targetidx]>relation_threshold:
-                                                        # print("Correct Relation")
                                                         interaction_record[targetidx][0] = interaction_record[targetidx][0] + 1
                                                     else:
-                                                        # print("Wrong Relation")
                                                         interaction_record[targetidx][1] = interaction_record[targetidx][1] + 1
                                         
                                             relation_prediction_result_dict[str(pair_output[0][0])+"_;_"+str(pair_output[1][0])] = {
@@ -533,8 +463,6 @@ if __name__=="__main__":
                                                 "Prediction (Logits)":sigmoided_version.cpu().tolist(),
                                                 "selected_relation":selected_relation,
                                             }
-                                            pprint.pprint(relation_prediction_result_dict[str(pair_output[0][0])+"_;_"+str(pair_output[1][0])])
-                                        # print(relation_prediction_result_dict[(pair_output[0][0],pair_output[1][0])])
                                     prediction_dict[singlesample["source_image"]] = {"archetype":singlesample["archetype"], "relations":relation_prediction_result_dict,"entities":sample_entity_report_dict}
                                         
                                         
@@ -550,13 +478,6 @@ if __name__=="__main__":
                                         fewshotrelation_loss_sum.backward()
                                         
                                 
-                                
-                                
-                                 # contains all the different textbox entity detections.
-
-                                # print(prediction_dict[singlesample["source_image"]])
-                                    
-                                    
                                 
                                 
                                 if istrain:
@@ -576,12 +497,10 @@ if __name__=="__main__":
                                 
                                 
                                 print("Batch Loss:",total_loss,"Batch timer:",time.time()-batchtimer)
-                                # quit()
                             
                                 entity_correctness_record["total_entities"] += total_entities
                                 entity_correctness_record["correct_entities_startstops"]+= entity_correctness_counter
                                 entity_correctness_record["pure_correct_entities"]+= entity_pure_correctness_counter
-                                # break
                                 if istrain:
                                     fewshottotal_train_loss += total_loss
                                 else:
