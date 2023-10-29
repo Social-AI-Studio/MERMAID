@@ -12,5 +12,4 @@ Requirements:
 4. Download environment at requirements.txt.
 
 * Initial data collection + Annotation + Data management - Go into "parse" folder
-* TD MEMES Alternative Exploration - Go into "TDMEMES" Folder.
 * To run the model as is: "run_model.py" if all other requirements have been met.
